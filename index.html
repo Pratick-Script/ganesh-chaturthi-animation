@@ -2,17 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Ganesh Chaturthi Celebration | ॥ श्री गणेशाय नमः ॥</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Yatra+One&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Yatra+One&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
     }
     body, html {
       width: 100%;
@@ -20,82 +22,111 @@
       overflow: hidden;
       background-color: #120309;
       font-family: 'Outfit', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
     #canvas-container {
       position: relative;
       width: 100%;
       height: 100%;
-      max-width: 1280px;
-      max-height: 720px;
-      aspect-ratio: 16 / 9;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 180, 50, 0.2);
+      overflow: hidden;
     }
     canvas {
       width: 100%;
       height: 100%;
       display: block;
-      background: radial-gradient(circle at center, #451022 0%, #280714 55%, #14040a 100%);
+      background: radial-gradient(circle at center, #420f20 0%, #240612 55%, #0f0208 100%);
+    }
+    .bottom-bar {
+      position: absolute;
+      bottom: 14px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    #progress-tag {
+      color: #ffca28;
+      font-size: 13px;
+      font-weight: 600;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9), 0 0 10px rgba(255, 202, 40, 0.4);
+      background: rgba(25, 4, 10, 0.55);
+      padding: 6px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 215, 65, 0.3);
+      letter-spacing: 0.5px;
     }
     .ui-controls {
-      position: absolute;
-      bottom: 16px;
-      right: 20px;
       display: flex;
-      gap: 10px;
-      z-index: 10;
+      gap: 8px;
+      pointer-events: auto;
     }
     .btn {
       background: rgba(45, 12, 22, 0.75);
       border: 1px solid #ffd700;
       color: #ffe57f;
-      padding: 7px 14px;
-      font-size: 13px;
+      padding: 8px 14px;
+      font-size: 12px;
       font-weight: 600;
       border-radius: 20px;
       cursor: pointer;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px);
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
-      gap: 5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      gap: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      min-height: 36px;
     }
-    .btn:hover {
+    .btn:hover, .btn:focus {
       background: #ffd700;
       color: #2a0510;
-      box-shadow: 0 0 14px rgba(255, 215, 0, 0.6);
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.7);
       transform: translateY(-1px);
+      outline: none;
     }
     .btn:active {
       transform: translateY(1px);
     }
-    #progress-tag {
-      position: absolute;
-      bottom: 18px;
-      left: 20px;
-      color: #ffca28;
-      font-size: 14px;
-      font-weight: 600;
-      text-shadow: 0 0 8px rgba(0,0,0,0.8);
-      z-index: 10;
-      pointer-events: none;
+    @media (max-width: 600px) {
+      .bottom-bar {
+        flex-direction: column-reverse;
+        gap: 8px;
+        bottom: 10px;
+        padding: 0 10px;
+      }
+      .ui-controls {
+        width: 100%;
+        justify-content: center;
+      }
+      .btn {
+        padding: 7px 12px;
+        font-size: 11px;
+        flex: 1;
+        justify-content: center;
+      }
+      #progress-tag {
+        font-size: 11px;
+        padding: 4px 10px;
+      }
     }
   </style>
 </head>
 <body>
 
   <div id="canvas-container">
-    <canvas id="animationCanvas" width="1280" height="720"></canvas>
+    <canvas id="animationCanvas"></canvas>
     
-    <div id="progress-tag">Sketching Lord Ganesha: 0%</div>
-
-    <div class="ui-controls">
-      <button class="btn" id="btn-resketch">↺ Re-sketch</button>
-      <button class="btn" id="btn-pause">⏸ Pause</button>
-      <button class="btn" id="btn-fullscreen">⛶ Fullscreen</button>
+    <div class="bottom-bar">
+      <div id="progress-tag">Sketching Lord Ganesha: 0%</div>
+      <div class="ui-controls">
+        <button class="btn" id="btn-resketch">↺ Re-sketch</button>
+        <button class="btn" id="btn-pause">⏸ Pause</button>
+        <button class="btn" id="btn-fullscreen">⛶ Fullscreen</button>
+      </div>
     </div>
   </div>
 
@@ -107,14 +138,17 @@
     const btnPause = document.getElementById('btn-pause');
     const btnFullscreen = document.getElementById('btn-fullscreen');
 
-    const W = 1280;
-    const H = 720;
-    const CX = W / 2;
-    const CY = H * 0.535;
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    let CX = W / 2;
+    let CY = H / 2;
+    let displaySize = 480;
+    let isPortrait = H > W;
 
     let isPaused = false;
     let timeSec = 0;
-    let strokes = [];
+    let rawStrokes = [];
+    let scaledStrokes = [];
     let totalPoints = 0;
     let pointsDrawn = 0;
     let currentStrokeIdx = 0;
@@ -124,10 +158,8 @@
     let brushPos = { x: CX, y: CY };
     let brushSparks = [];
 
-    // Persistent offscreen canvas for sketch lines
+    // Offscreen persistent canvas for drawing lines
     const sketchCanvas = document.createElement('canvas');
-    sketchCanvas.width = W;
-    sketchCanvas.height = H;
     const sCtx = sketchCanvas.getContext('2d');
 
     // Bloom image
@@ -136,23 +168,97 @@
     let bloomLoaded = false;
     bloomImg.onload = () => { bloomLoaded = true; };
 
-    // --- 1. PARTICLES & DIYAS SETUP ---
-    class FallingPetal {
-      constructor(startAnywhere = false) {
-        this.reset(startAnywhere);
+    // Resize Handler
+    function handleResize() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      isPortrait = H > W;
+      CX = W / 2;
+
+      // Adjust positioning and size based on portrait vs landscape
+      if (isPortrait) {
+        displaySize = Math.min(W * 0.88, H * 0.54);
+        CY = H * 0.49;
+      } else {
+        displaySize = Math.min(W * 0.55, H * 0.64);
+        CY = H * 0.535;
       }
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      sketchCanvas.width = W * dpr;
+      sketchCanvas.height = H * dpr;
+      sCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      recomputeStrokes();
+      redrawCurrentProgress();
+    }
+
+    function recomputeStrokes() {
+      if (!rawStrokes.length) return;
+      const cachedSize = 490;
+      const scale = displaySize / cachedSize;
+      const ox = CX - displaySize / 2;
+      const oy = CY - displaySize / 2;
+
+      scaledStrokes = rawStrokes.map(s => ({
+        color: `rgb(${s.color[0]}, ${s.color[1]}, ${s.color[2]})`,
+        pts: s.pts.map(p => ({ x: ox + p[0] * scale, y: oy + p[1] * scale }))
+      }));
+    }
+
+    function redrawCurrentProgress() {
+      sCtx.clearRect(0, 0, W, H);
+      if (!scaledStrokes.length) return;
+
+      const limit = isCompleted ? scaledStrokes.length : currentStrokeIdx;
+      for (let i = 0; i < limit; i++) {
+        const s = scaledStrokes[i];
+        if (!s || s.pts.length < 2) continue;
+        sCtx.strokeStyle = s.color;
+        sCtx.lineWidth = Math.max(1.5, displaySize * 0.0042);
+        sCtx.beginPath();
+        s.pts.forEach((p, idx) => {
+          if (idx === 0) sCtx.moveTo(p.x, p.y);
+          else sCtx.lineTo(p.x, p.y);
+        });
+        sCtx.stroke();
+      }
+
+      if (!isCompleted && currentStrokeIdx < scaledStrokes.length) {
+        const cur = scaledStrokes[currentStrokeIdx];
+        if (cur && cur.pts.length >= 2 && currentPtIdx > 0) {
+          sCtx.strokeStyle = cur.color;
+          sCtx.lineWidth = Math.max(1.5, displaySize * 0.0042);
+          sCtx.beginPath();
+          for (let j = 0; j <= currentPtIdx && j < cur.pts.length; j++) {
+            const p = cur.pts[j];
+            if (j === 0) sCtx.moveTo(p.x, p.y);
+            else sCtx.lineTo(p.x, p.y);
+          }
+          sCtx.stroke();
+        }
+      }
+    }
+
+    // --- 1. PARTICLES & DIYAS ---
+    class FallingPetal {
+      constructor(startAnywhere = false) { this.reset(startAnywhere); }
       reset(startAnywhere = false) {
         this.xBase = Math.random() * (W + 40) - 20;
         this.y = startAnywhere ? Math.random() * H : Math.random() * -60 - 20;
-        this.speedY = 1.2 + Math.random() * 1.4;
-        this.swayAmp = 25 + Math.random() * 30;
+        this.speedY = 1.0 + Math.random() * 1.5;
+        this.swayAmp = 20 + Math.random() * (isPortrait ? 25 : 35);
         this.swaySpeed = 1.0 + Math.random() * 1.2;
         this.swayPhase = Math.random() * Math.PI * 2;
         this.angle = Math.random() * Math.PI * 2;
-        this.rotSpeed = (Math.random() - 0.5) * 0.04;
+        this.rotSpeed = (Math.random() - 0.5) * 0.035;
         this.flipAngle = Math.random() * Math.PI * 2;
         this.flipSpeed = 1.5 + Math.random() * 1.8;
-        this.size = 11 + Math.random() * 7;
+        this.size = (isPortrait ? 9 : 11) + Math.random() * 6;
         this.isMarigold = Math.random() < 0.65;
         this.colorDark = this.isMarigold ? '#ff8f00' : '#c2185b';
         this.colorLight = this.isMarigold ? '#ffd54f' : '#ff4081';
@@ -191,14 +297,14 @@
     class Sparkle {
       constructor() { this.reset(); }
       reset() {
-        this.x = W * 0.2 + Math.random() * W * 0.6;
-        this.y = H * 0.2 + Math.random() * H * 0.7;
+        this.x = CX + (Math.random() - 0.5) * displaySize * 1.3;
+        this.y = CY + (Math.random() - 0.5) * displaySize * 1.3;
         this.vx = (Math.random() - 0.5) * 0.6;
         this.vy = -0.3 - Math.random() * 0.5;
-        this.radius = 1.8 + Math.random() * 2.2;
+        this.radius = 1.6 + Math.random() * 2.0;
         this.pulseFreq = 2.0 + Math.random() * 2.0;
         this.phase = Math.random() * Math.PI * 2;
-        this.life = 3 + Math.random() * 4;
+        this.life = 3 + Math.random() * 3.5;
         this.age = Math.random() * this.life;
       }
       update(dt) {
@@ -220,32 +326,33 @@
         c.strokeStyle = '#fff9c4';
         c.lineWidth = 1;
         c.beginPath();
-        c.moveTo(this.x - r * 2.2, this.y);
-        c.lineTo(this.x + r * 2.2, this.y);
-        c.moveTo(this.x, this.y - r * 2.2);
-        c.lineTo(this.x, this.y + r * 2.2);
+        c.moveTo(this.x - r * 2.0, this.y);
+        c.lineTo(this.x + r * 2.0, this.y);
+        c.moveTo(this.x, this.y - r * 2.0);
+        c.lineTo(this.x, this.y + r * 2.0);
         c.stroke();
         c.restore();
       }
     }
 
     class Diya {
-      constructor(x, y, scale = 1.0) {
-        this.x = x;
-        this.y = y;
+      constructor(relX, relY, scale = 1.0) {
+        this.relX = relX;
+        this.relY = relY;
         this.scale = scale;
         this.phase = Math.random() * Math.PI * 2;
       }
-      update(dt) {
-        this.phase += 11.0 * dt;
-      }
+      update(dt) { this.phase += 11.0 * dt; }
       draw(c, t) {
-        const bx = this.x, by = this.y, sc = this.scale;
+        const bx = this.relX < 0 ? W + this.relX : this.relX;
+        const by = H - this.relY;
+        const responsiveScale = this.scale * Math.min(1.0, W / 650);
+        const sc = Math.max(0.7, responsiveScale);
         const jitter = Math.sin(this.phase) * 0.12 + Math.cos(this.phase * 2.3) * 0.08;
 
         // Floor warm illumination
         c.save();
-        const rad = 120 * sc * (1.0 + jitter);
+        const rad = 110 * sc * (1.0 + jitter);
         const grad = c.createRadialGradient(bx, by - 5, 5, bx, by - 5, rad);
         grad.addColorStop(0, 'rgba(255, 180, 50, 0.4)');
         grad.addColorStop(0.5, 'rgba(255, 120, 20, 0.15)');
@@ -259,62 +366,57 @@
         // Brass bowl
         c.fillStyle = '#8d4d12';
         c.beginPath();
-        c.ellipse(bx, by + 12 * sc, 24 * sc, 6 * sc, 0, 0, Math.PI * 2);
+        c.ellipse(bx, by + 12 * sc, 22 * sc, 6 * sc, 0, 0, Math.PI * 2);
         c.fill();
 
         c.fillStyle = '#b86e16';
         c.beginPath();
-        c.moveTo(bx - 40 * sc, by);
-        c.lineTo(bx - 28 * sc, by + 14 * sc);
-        c.lineTo(bx + 28 * sc, by + 14 * sc);
-        c.lineTo(bx + 40 * sc, by);
+        c.moveTo(bx - 36 * sc, by);
+        c.lineTo(bx - 26 * sc, by + 13 * sc);
+        c.lineTo(bx + 26 * sc, by + 13 * sc);
+        c.lineTo(bx + 36 * sc, by);
         c.closePath();
         c.fill();
 
         c.fillStyle = '#f5b041';
         c.beginPath();
-        c.ellipse(bx, by - 2 * sc, 38 * sc, 7 * sc, 0, 0, Math.PI * 2);
+        c.ellipse(bx, by - 2 * sc, 34 * sc, 7 * sc, 0, 0, Math.PI * 2);
         c.fill();
 
         // Flickering Flame
-        const curH = 38 * sc * (1.0 + jitter * 0.85);
+        const curH = 36 * sc * (1.0 + jitter * 0.85);
         const tipSway = Math.sin(t * 8.0 + this.phase) * 3.5 * sc;
         const tipX = bx + tipSway;
         const tipY = by - 3 * sc - curH;
 
-        // Outer flame
         c.fillStyle = '#ff5722';
         c.beginPath();
-        c.moveTo(bx - 14 * sc, by - 2 * sc);
-        c.quadraticCurveTo(bx - 16 * sc, by - curH * 0.4, tipX, tipY);
-        c.quadraticCurveTo(bx + 16 * sc, by - curH * 0.4, bx + 14 * sc, by - 2 * sc);
+        c.moveTo(bx - 13 * sc, by - 2 * sc);
+        c.quadraticCurveTo(bx - 15 * sc, by - curH * 0.4, tipX, tipY);
+        c.quadraticCurveTo(bx + 15 * sc, by - curH * 0.4, bx + 13 * sc, by - 2 * sc);
         c.fill();
 
-        // Inner golden flame
         c.fillStyle = '#ffeb3b';
         c.beginPath();
-        c.moveTo(bx - 9 * sc, by - 2 * sc);
-        c.quadraticCurveTo(bx - 10 * sc, by - curH * 0.35, tipX * 0.7 + bx * 0.3, tipY + curH * 0.28);
-        c.quadraticCurveTo(bx + 10 * sc, by - curH * 0.35, bx + 9 * sc, by - 2 * sc);
+        c.moveTo(bx - 8 * sc, by - 2 * sc);
+        c.quadraticCurveTo(bx - 9 * sc, by - curH * 0.35, tipX * 0.7 + bx * 0.3, tipY + curH * 0.28);
+        c.quadraticCurveTo(bx + 8 * sc, by - curH * 0.35, bx + 8 * sc, by - 2 * sc);
         c.fill();
 
-        // Core
         c.fillStyle = '#ffffff';
         c.beginPath();
         c.moveTo(bx - 4 * sc, by - 2 * sc);
-        c.quadraticCurveTo(bx - 5 * sc, by - curH * 0.2, bx, tipY + curH * 0.55);
-        c.quadraticCurveTo(bx + 5 * sc, by - curH * 0.2, bx + 4 * sc, by - 2 * sc);
+        c.quadraticCurveTo(bx - 4 * sc, by - curH * 0.2, bx, tipY + curH * 0.55);
+        c.quadraticCurveTo(bx + 4 * sc, by - curH * 0.2, bx + 4 * sc, by - 2 * sc);
         c.fill();
       }
     }
 
-    const petals = Array.from({ length: 45 }, () => new FallingPetal(true));
-    const sparkles = Array.from({ length: 60 }, () => new Sparkle());
+    const petals = Array.from({ length: 42 }, () => new FallingPetal(true));
+    const sparkles = Array.from({ length: 55 }, () => new Sparkle());
     const diyas = [
-      new Diya(140, 642, 1.15),
-      new Diya(310, 658, 0.85),
-      new Diya(W - 310, 658, 0.85),
-      new Diya(W - 140, 642, 1.15)
+      new Diya(70, 65, 1.1),
+      new Diya(-70, 65, 1.1)
     ];
 
     // --- 2. LOAD SKETCH DATA ---
@@ -322,22 +424,13 @@
       try {
         const res = await fetch('assets/ganesh_sketch.json');
         const data = await res.json();
-        const cachedSize = data.size || 490;
-        const targetSize = 490;
-        const scale = targetSize / cachedSize;
-        const ox = CX - targetSize / 2;
-        const oy = CY - targetSize / 2;
-
-        strokes = data.strokes.map(s => ({
-          color: `rgb(${s.color[0]}, ${s.color[1]}, ${s.color[2]})`,
-          pts: s.pts.map(p => ({ x: ox + p[0] * scale, y: oy + p[1] * scale }))
-        }));
-        totalPoints = strokes.reduce((sum, s) => sum + s.pts.length, 0);
+        rawStrokes = data.strokes;
+        totalPoints = rawStrokes.reduce((sum, s) => sum + s.pts.length, 0);
+        handleResize();
       } catch (err) {
         console.warn('Could not load assets/ganesh_sketch.json:', err);
       }
     }
-    loadStrokes();
 
     function resetSketch() {
       sCtx.clearRect(0, 0, W, H);
@@ -350,24 +443,15 @@
     }
 
     function skipSketch() {
-      if (isCompleted) return;
-      for (const s of strokes) {
-        sCtx.strokeStyle = s.color;
-        sCtx.lineWidth = 2;
-        sCtx.beginPath();
-        s.pts.forEach((p, idx) => {
-          if (idx === 0) sCtx.moveTo(p.x, p.y);
-          else sCtx.lineTo(p.x, p.y);
-        });
-        sCtx.stroke();
-      }
-      currentStrokeIdx = strokes.length;
+      if (isCompleted || !scaledStrokes.length) return;
+      currentStrokeIdx = scaledStrokes.length;
       isCompleted = true;
       colorBloomAlpha = 180;
       pointsDrawn = totalPoints;
+      redrawCurrentProgress();
     }
 
-    // --- 3. MAIN ANIMATION LOOP ---
+    // --- 3. ANIMATION LOOP ---
     let lastTime = performance.now();
 
     function animate(now) {
@@ -378,11 +462,11 @@
       if (!isPaused) {
         timeSec += dt;
 
-        // Update sketch
-        if (!isCompleted && strokes.length > 0) {
-          let budget = 48;
-          while (budget > 0 && currentStrokeIdx < strokes.length) {
-            const curStroke = strokes[currentStrokeIdx];
+        // Progressive auto-sketching
+        if (!isCompleted && scaledStrokes.length > 0) {
+          let budget = isPortrait ? 52 : 48;
+          while (budget > 0 && currentStrokeIdx < scaledStrokes.length) {
+            const curStroke = scaledStrokes[currentStrokeIdx];
             const pts = curStroke.pts;
 
             if (currentPtIdx < pts.length - 1) {
@@ -390,7 +474,7 @@
               const p1 = pts[currentPtIdx + 1];
 
               sCtx.strokeStyle = curStroke.color;
-              sCtx.lineWidth = 2;
+              sCtx.lineWidth = Math.max(1.5, displaySize * 0.0042);
               sCtx.beginPath();
               sCtx.moveTo(p0.x, p0.y);
               sCtx.lineTo(p1.x, p1.y);
@@ -406,7 +490,7 @@
                   x: p1.x, y: p1.y,
                   vx: (Math.random() - 0.5) * 3,
                   vy: (Math.random() - 0.5) * 3 - 0.5,
-                  life: 0.35 + Math.random() * 0.25,
+                  life: 0.32 + Math.random() * 0.25,
                   age: 0,
                   color: curStroke.color
                 });
@@ -417,14 +501,13 @@
             }
           }
 
-          if (currentStrokeIdx >= strokes.length) {
+          if (currentStrokeIdx >= scaledStrokes.length) {
             isCompleted = true;
           }
         } else if (isCompleted && colorBloomAlpha < 180) {
           colorBloomAlpha = Math.min(180, colorBloomAlpha + 65 * dt);
         }
 
-        // Update particles
         brushSparks.forEach(sp => {
           sp.x += sp.vx * (dt * 60);
           sp.y += sp.vy * (dt * 60);
@@ -437,7 +520,7 @@
         diyas.forEach(d => d.update(dt));
       }
 
-      // Update UI Progress
+      // Update UI Progress text
       if (!isCompleted && totalPoints > 0) {
         const pct = Math.floor((pointsDrawn / totalPoints) * 100);
         progressTag.textContent = `Sketching Lord Ganesha: ${pct}%`;
@@ -452,9 +535,10 @@
       ctx.save();
       ctx.translate(CX, CY);
       ctx.rotate(timeSec * 0.035);
-      ctx.strokeStyle = 'rgba(255, 215, 100, 0.09)';
+      ctx.strokeStyle = 'rgba(255, 215, 100, 0.08)';
       ctx.lineWidth = 1;
-      for (let r = 70; r <= 270; r += 50) {
+      const mandalaR = displaySize * 0.58;
+      for (let r = mandalaR * 0.25; r <= mandalaR; r += mandalaR * 0.2) {
         ctx.beginPath();
         ctx.arc(0, 0, r, 0, Math.PI * 2);
         ctx.stroke();
@@ -463,7 +547,7 @@
         const th = (i * Math.PI * 2) / 16;
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.lineTo(Math.cos(th) * 260, Math.sin(th) * 260);
+        ctx.lineTo(Math.cos(th) * mandalaR * 0.95, Math.sin(th) * mandalaR * 0.95);
         ctx.stroke();
       }
       ctx.restore();
@@ -471,10 +555,10 @@
       // Pulsating Divine Aura
       const pulse = 0.5 + 0.5 * Math.sin(timeSec * 1.8);
       ctx.save();
-      const auraRad = 270 * (0.95 + 0.1 * pulse);
-      const auraGrad = ctx.createRadialGradient(CX, CY, 30, CX, CY, auraRad);
-      auraGrad.addColorStop(0, 'rgba(255, 215, 65, 0.35)');
-      auraGrad.addColorStop(0.5, 'rgba(255, 160, 20, 0.18)');
+      const auraRad = displaySize * (0.55 + 0.06 * pulse);
+      const auraGrad = ctx.createRadialGradient(CX, CY, 20, CX, CY, auraRad);
+      auraGrad.addColorStop(0, 'rgba(255, 215, 65, 0.32)');
+      auraGrad.addColorStop(0.5, 'rgba(255, 160, 20, 0.16)');
       auraGrad.addColorStop(1, 'rgba(255, 140, 0, 0)');
       ctx.fillStyle = auraGrad;
       ctx.beginPath();
@@ -482,19 +566,18 @@
       ctx.fill();
       ctx.restore();
 
-      // Sparkles (Background)
-      sparkles.slice(0, 30).forEach(sp => sp.draw(ctx, timeSec));
+      // Background Sparkles
+      sparkles.slice(0, 25).forEach(sp => sp.draw(ctx, timeSec));
 
       // Watercolor Bloom
       if (bloomLoaded && colorBloomAlpha > 0) {
         ctx.save();
         ctx.globalAlpha = colorBloomAlpha / 255;
-        const bSize = 480;
-        ctx.drawImage(bloomImg, CX - bSize / 2, CY - bSize / 2, bSize, bSize);
+        ctx.drawImage(bloomImg, CX - displaySize / 2, CY - displaySize / 2, displaySize, displaySize);
         ctx.restore();
       }
 
-      // Sketch Canvas (with breathing pulse once completed)
+      // Sketch Canvas with gentle pulse once completed
       ctx.save();
       if (isCompleted) {
         const sc = 1.0 + 0.015 * pulse;
@@ -505,7 +588,7 @@
       ctx.drawImage(sketchCanvas, 0, 0);
       ctx.restore();
 
-      // Magic Brush Tip & Sparks (during sketching)
+      // Magic Brush Tip & Embers (during sketching)
       if (!isCompleted) {
         brushSparks.forEach(sp => {
           const a = 1.0 - (sp.age / sp.life);
@@ -521,26 +604,26 @@
         // Glowing Star Cursor
         ctx.save();
         const bx = brushPos.x, by = brushPos.y;
-        const bGrad = ctx.createRadialGradient(bx, by, 1, bx, by, 16);
-        bGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+        const bGrad = ctx.createRadialGradient(bx, by, 1, bx, by, 14);
+        bGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
         bGrad.addColorStop(0.5, 'rgba(255, 215, 65, 0.5)');
         bGrad.addColorStop(1, 'rgba(255, 200, 50, 0)');
         ctx.fillStyle = bGrad;
         ctx.beginPath();
-        ctx.arc(bx, by, 16, 0, Math.PI * 2);
+        ctx.arc(bx, by, 14, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.strokeStyle = '#fffde7';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.8;
         ctx.beginPath();
-        ctx.moveTo(bx - 10, by); ctx.lineTo(bx + 10, by);
-        ctx.moveTo(bx, by - 10); ctx.lineTo(bx, by + 10);
+        ctx.moveTo(bx - 9, by); ctx.lineTo(bx + 9, by);
+        ctx.moveTo(bx, by - 9); ctx.lineTo(bx, by + 9);
         ctx.stroke();
         ctx.restore();
       }
 
-      // Sparkles (Foreground)
-      sparkles.slice(30).forEach(sp => sp.draw(ctx, timeSec));
+      // Foreground Sparkles
+      sparkles.slice(25).forEach(sp => sp.draw(ctx, timeSec));
 
       // Diyas
       diyas.forEach(d => d.draw(ctx, timeSec));
@@ -557,50 +640,56 @@
 
     function drawToran(c, t) {
       // Bells
-      const bellPositions = [W * 0.08, W * 0.18, W * 0.82, W * 0.92];
+      const bellPositions = isPortrait 
+        ? [W * 0.07, W * 0.93] 
+        : [W * 0.08, W * 0.18, W * 0.82, W * 0.92];
+
       bellPositions.forEach((bx, idx) => {
         const sway = Math.sin(t * 1.5 + idx) * 0.06;
-        const len = 75;
+        const len = isPortrait ? 55 : 70;
         const botX = bx + Math.sin(sway) * len;
         const botY = Math.cos(sway) * len;
 
         c.strokeStyle = '#c6841b';
-        c.lineWidth = 2;
+        c.lineWidth = 1.8;
         c.beginPath();
         c.moveTo(bx, 0);
         c.lineTo(botX, botY);
         c.stroke();
 
+        const bellR = isPortrait ? 8 : 10;
         c.fillStyle = '#ffd54f';
         c.beginPath();
-        c.arc(botX, botY + 12, 10, 0, Math.PI * 2);
+        c.arc(botX, botY + bellR, bellR, 0, Math.PI * 2);
         c.fill();
         c.fillStyle = '#e65100';
         c.beginPath();
-        c.arc(botX, botY + 16, 3, 0, Math.PI * 2);
+        c.arc(botX, botY + bellR + 4, 2.5, 0, Math.PI * 2);
         c.fill();
       });
 
       // Mango leaves swag
-      const numArcs = 10;
+      const numArcs = Math.max(6, Math.floor(W / 60));
       const arcW = W / numArcs;
+      const sag = isPortrait ? 18 : 24;
+
       for (let i = 0; i < numArcs; i++) {
         const sx = i * arcW, ex = (i + 1) * arcW, mx = (sx + ex) / 2;
         c.fillStyle = '#2e7d32';
         c.beginPath();
         c.moveTo(sx, 0);
         c.lineTo(ex, 0);
-        c.lineTo(mx, 26);
+        c.lineTo(mx, sag);
         c.closePath();
         c.fill();
 
         c.fillStyle = '#ff8f00';
         c.beginPath();
-        c.arc(sx, 5, 8, 0, Math.PI * 2);
+        c.arc(sx, 4, isPortrait ? 6 : 8, 0, Math.PI * 2);
         c.fill();
         c.fillStyle = '#ffd54f';
         c.beginPath();
-        c.arc(sx, 5, 4, 0, Math.PI * 2);
+        c.arc(sx, 4, isPortrait ? 3 : 4, 0, Math.PI * 2);
         c.fill();
       }
     }
@@ -609,59 +698,111 @@
       c.save();
       c.textAlign = 'center';
 
+      const titleSize = isPortrait 
+        ? Math.min(36, Math.max(24, W * 0.082)) 
+        : Math.min(52, Math.max(34, H * 0.08));
+
+      const titleY = isPortrait 
+        ? Math.max(38, H * 0.058) 
+        : Math.max(48, H * 0.075);
+
       // Title Shadow
-      c.font = '900 52px "Cinzel Decorative", serif';
+      c.font = `900 ${titleSize}px "Cinzel Decorative", serif`;
       c.fillStyle = '#100307';
-      c.fillText('Ganesh Chaturthi', CX + 2, 54);
+      c.fillText('Ganesh Chaturthi', CX + 2, titleY + 2);
 
       // Title Glow & Gold
       const glowAlpha = 0.7 + 0.3 * Math.sin(t * 2.5);
       c.shadowColor = `rgba(255, 215, 0, ${glowAlpha})`;
-      c.shadowBlur = 18;
+      c.shadowBlur = isPortrait ? 12 : 18;
       c.fillStyle = '#fff3c4';
-      c.fillText('Ganesh Chaturthi', CX, 52);
+      c.fillText('Ganesh Chaturthi', CX, titleY);
       c.shadowBlur = 0;
 
       // Subtitle
-      c.font = '700 24px "Yatra One", cursive, sans-serif';
-      c.fillStyle = '#100307';
-      c.fillText('॥ ॐ गं गणपतये नमः ॥', CX + 1, 95);
-      c.fillStyle = '#ffca28';
-      c.fillText('॥ ॐ गं गणपतये नमः ॥', CX, 94);
+      const subSize = isPortrait 
+        ? Math.min(18, Math.max(14, W * 0.046)) 
+        : Math.min(24, Math.max(16, H * 0.038));
 
-      // Gold divider wings
+      const subY = titleY + (isPortrait ? 28 : 38);
+
+      c.font = `700 ${subSize}px "Yatra One", cursive, sans-serif`;
+      c.fillStyle = '#100307';
+      c.fillText('॥ ॐ गं गणपतये नमः ॥', CX + 1, subY + 1);
+      c.fillStyle = '#ffca28';
+      c.fillText('॥ ॐ गं गणपतये नमः ॥', CX, subY);
+
+      // Gold divider line
+      const divW = isPortrait ? W * 0.32 : Math.min(260, W * 0.22);
+      const lineY = subY + (isPortrait ? 12 : 18);
+
       c.strokeStyle = '#c6841b';
-      c.lineWidth = 2;
+      c.lineWidth = 1.5;
       c.beginPath();
-      c.moveTo(CX - 260, 114); c.lineTo(CX - 40, 114);
-      c.moveTo(CX + 40, 114); c.lineTo(CX + 260, 114);
+      c.moveTo(CX - divW, lineY); c.lineTo(CX - (isPortrait ? 25 : 35), lineY);
+      c.moveTo(CX + (isPortrait ? 25 : 35), lineY); c.lineTo(CX + divW, lineY);
       c.stroke();
 
       c.fillStyle = '#ffd54f';
       c.beginPath();
-      c.arc(CX, 114, 5, 0, Math.PI * 2);
+      c.arc(CX, lineY, 4, 0, Math.PI * 2);
       c.fill();
       c.fillStyle = '#d32f2f';
       c.beginPath();
-      c.arc(CX, 114, 2.5, 0, Math.PI * 2);
+      c.arc(CX, lineY, 2, 0, Math.PI * 2);
       c.fill();
 
       c.restore();
     }
 
     // --- 5. EVENT LISTENERS ---
-    btnResketch.addEventListener('click', resetSketch);
-    btnPause.addEventListener('click', () => {
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', () => setTimeout(handleResize, 150));
+
+    btnResketch.addEventListener('click', (e) => {
+      e.stopPropagation();
+      resetSketch();
+    });
+
+    btnPause.addEventListener('click', (e) => {
+      e.stopPropagation();
       isPaused = !isPaused;
       btnPause.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
     });
-    btnFullscreen.addEventListener('click', () => {
+
+    btnFullscreen.addEventListener('click', (e) => {
+      e.stopPropagation();
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => alert(err.message));
+        document.documentElement.requestFullscreen().catch(() => {});
       } else {
-        document.exitFullscreen();
+        document.exitFullscreen().catch(() => {});
       }
     });
+
+    // Touch on screen to create magical sparks
+    canvas.addEventListener('pointerdown', (e) => {
+      if (e.target !== canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const touchX = e.clientX - rect.left;
+      const touchY = e.clientY - rect.top;
+
+      for (let i = 0; i < 10; i++) {
+        brushSparks.push({
+          x: touchX,
+          y: touchY,
+          vx: (Math.random() - 0.5) * 4,
+          vy: (Math.random() - 0.5) * 4 - 1,
+          life: 0.4 + Math.random() * 0.3,
+          age: 0,
+          color: randomSparkColor()
+        });
+      }
+    });
+
+    function randomSparkColor() {
+      const colors = ['#ffe082', '#ffca28', '#ff7043', '#ff4081', '#ffffff'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
 
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space') {
@@ -674,6 +815,8 @@
       }
     });
 
+    // Initialize
+    loadStrokes();
     requestAnimationFrame(animate);
   </script>
 </body>
