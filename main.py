@@ -1059,6 +1059,22 @@ class GaneshAnimationApp:
         sys.exit()
 
 
+# ------------------------------------------------------------------------------
+# VERCEL / WEB DEPLOYMENT COMPATIBILITY
+# Exports top-level 'app', 'application', and 'handler' required by Vercel
+# ------------------------------------------------------------------------------
+from http.server import SimpleHTTPRequestHandler
+
+class VercelWebHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path in ("", "/"):
+            self.path = "/index.html"
+        return super().do_GET()
+
+handler = VercelWebHandler
+app = VercelWebHandler
+application = VercelWebHandler
+
 if __name__ == "__main__":
-    app = GaneshAnimationApp()
-    app.run()
+    desktop_app = GaneshAnimationApp()
+    desktop_app.run()
